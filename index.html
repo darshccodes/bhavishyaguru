@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bhavishya Guru — Achal Jha</title>
+  <meta name="description" content="Vedic Astrologer Achal Jha — Bhavishya Guru. Expert in Vedic Astrology, Vastu Shastra, Palmistry, and Muhurat." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js" defer></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ CANVAS BACKGROUND -->
+  <canvas id="cosmos-canvas" aria-hidden="true"></canvas>
+
+  <!-- ═══════════════════════════════════════════════════════ SCROLL ZODIAC WHEEL -->
+  <div class="zodiac-scroll-wrapper" aria-hidden="true">
+    <svg class="zodiac-wheel" id="zodiacWheel" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer ring -->
+      <circle cx="300" cy="300" r="295" fill="none" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+      <circle cx="300" cy="300" r="240" fill="none" stroke="rgba(212,175,55,0.1)" stroke-width="0.5"/>
+      <circle cx="300" cy="300" r="180" fill="none" stroke="rgba(212,175,55,0.08)" stroke-width="0.5"/>
+      <circle cx="300" cy="300" r="120" fill="none" stroke="rgba(212,175,55,0.06)" stroke-width="0.5"/>
+      <!-- 12 division lines -->
+      <g stroke="rgba(212,175,55,0.12)" stroke-width="0.8">
+        <line x1="300" y1="5" x2="300" y2="595"/>
+        <line x1="5" y1="300" x2="595" y2="300"/>
+        <line x1="82" y1="82" x2="518" y2="518"/>
+        <line x1="518" y1="82" x2="82" y2="518"/>
+        <line x1="45" y1="195" x2="555" y2="405"/>
+        <line x1="555" y1="195" x2="45" y2="405"/>
+        <line x1="195" y1="45" x2="405" y2="555"/>
+        <line x1="405" y1="45" x2="195" y2="555"/>
+      </g>
+      <!-- Inner mandala petals -->
+      <g fill="none" stroke="rgba(212,175,55,0.1)" stroke-width="0.6">
+        <ellipse cx="300" cy="300" rx="60" ry="110" transform="rotate(0 300 300)"/>
+        <ellipse cx="300" cy="300" rx="60" ry="110" transform="rotate(30 300 300)"/>
+        <ellipse cx="300" cy="300" rx="60" ry="110" transform="rotate(60 300 300)"/>
+        <ellipse cx="300" cy="300" rx="60" ry="110" transform="rotate(90 300 300)"/>
+        <ellipse cx="300" cy="300" rx="60" ry="110" transform="rotate(120 300 300)"/>
+        <ellipse cx="300" cy="300" rx="60" ry="110" transform="rotate(150 300 300)"/>
+      </g>
+      <!-- Zodiac glyphs at radius 265 -->
+      <g font-family="serif" font-size="18" fill="rgba(212,175,55,0.5)" text-anchor="middle" dominant-baseline="central">
+        <text transform="rotate(0,300,300) translate(300,38)">♈</text>
+        <text transform="rotate(30,300,300) translate(300,38)">♉</text>
+        <text transform="rotate(60,300,300) translate(300,38)">♊</text>
+        <text transform="rotate(90,300,300) translate(300,38)">♋</text>
+        <text transform="rotate(120,300,300) translate(300,38)">♌</text>
+        <text transform="rotate(150,300,300) translate(300,38)">♍</text>
+        <text transform="rotate(180,300,300) translate(300,38)">♎</text>
+        <text transform="rotate(210,300,300) translate(300,38)">♏</text>
+        <text transform="rotate(240,300,300) translate(300,38)">♐</text>
+        <text transform="rotate(270,300,300) translate(300,38)">♑</text>
+        <text transform="rotate(300,300,300) translate(300,38)">♒</text>
+        <text transform="rotate(330,300,300) translate(300,38)">♓</text>
+      </g>
+      <!-- Center Sri Yantra-ish star -->
+      <polygon points="300,220 320,280 385,280 333,318 353,378 300,340 247,378 267,318 215,280 280,280" fill="none" stroke="rgba(212,175,55,0.18)" stroke-width="0.8"/>
+      <polygon points="300,380 280,320 215,320 267,282 247,222 300,260 353,222 333,282 385,320 320,320" fill="none" stroke="rgba(212,175,55,0.12)" stroke-width="0.8"/>
+    </svg>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ NAVBAR -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <a href="#hero" class="logo" aria-label="Bhavishya Guru — Home">Bhavishya Guru</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks" role="list">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#contact" class="nav-cta">Book Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════ HERO -->
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <div class="hero-eclipse" aria-hidden="true"></div>
+    <div class="hero-glass">
+      <p class="hero-eyebrow">Vedic Astrologer · Vastu · Palmistry</p>
+      <h1 id="hero-title" class="hero-name">Achal Jha</h1>
+      <p class="hero-tagline">Where the Cosmos Speaks,<br/>I Translate.</p>
+      <div class="hero-divider" aria-hidden="true"></div>
+      <p class="hero-sub">Over 25 years of guidance rooted in the sacred traditions of Jyotish Shastra — illuminating your past, decoding your present, and charting your destiny.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Seek Guidance</a>
+        <a href="#about" class="btn-ghost">Discover More</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ ABOUT -->
+  <section class="about" id="about" aria-labelledby="about-title">
+    <div class="section-header">
+      <span class="section-eyebrow">The Seer</span>
+      <h2 id="about-title" class="section-title">Ancient Wisdom.<br/>Living Guidance.</h2>
+    </div>
+    <div class="about-grid">
+
+      <article class="glass-card about-card" data-reveal>
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="28" stroke="rgba(212,175,55,0.6)" stroke-width="1"/>
+            <circle cx="30" cy="30" r="6" fill="rgba(212,175,55,0.3)"/>
+            <line x1="30" y1="2" x2="30" y2="58" stroke="rgba(212,175,55,0.3)" stroke-width="0.5"/>
+            <line x1="2" y1="30" x2="58" y2="30" stroke="rgba(212,175,55,0.3)" stroke-width="0.5"/>
+            <line x1="10" y1="10" x2="50" y2="50" stroke="rgba(212,175,55,0.2)" stroke-width="0.5"/>
+            <line x1="50" y1="10" x2="10" y2="50" stroke="rgba(212,175,55,0.2)" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <h3>Sacred Lineage</h3>
+        <p>Born into a family of Jyotishis from Bihar, Achal Jha carries forward an unbroken lineage of Vedic knowledge spanning seven generations. His training began at age nine under the tutelage of his grandfather, Pandit Raghunath Jha.</p>
+      </article>
+
+      <article class="glass-card about-card" data-reveal>
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="30,4 36,20 54,20 40,32 46,50 30,38 14,50 20,32 6,20 24,20" stroke="rgba(212,175,55,0.6)" stroke-width="1" fill="rgba(212,175,55,0.04)"/>
+          </svg>
+        </div>
+        <h3>Philosophy</h3>
+        <p>Achal Ji believes the horoscope is not a prison but a map — a sacred document of your soul's chosen journey. Astrology does not predetermine; it illuminates the terrain so you may walk it with grace, awareness, and sovereignty.</p>
+      </article>
+
+      <article class="glass-card about-card" data-reveal>
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="22" stroke="rgba(212,175,55,0.4)" stroke-width="1"/>
+            <circle cx="30" cy="12" r="4" fill="rgba(212,175,55,0.3)"/>
+            <circle cx="46" cy="21" r="4" fill="rgba(212,175,55,0.2)"/>
+            <circle cx="46" cy="39" r="4" fill="rgba(212,175,55,0.2)"/>
+            <circle cx="30" cy="48" r="4" fill="rgba(212,175,55,0.25)"/>
+            <circle cx="14" cy="39" r="4" fill="rgba(212,175,55,0.2)"/>
+            <circle cx="14" cy="21" r="4" fill="rgba(212,175,55,0.2)"/>
+            <circle cx="30" cy="30" r="3" fill="rgba(212,175,55,0.5)"/>
+          </svg>
+        </div>
+        <h3>Navagraha Mastery</h3>
+        <p>A specialist in the nine planetary bodies of Vedic cosmology — their transits, conjunctions, and dasha periods. Each reading is a precise forensic analysis of your birth chart, cross-referenced with current planetary cycles.</p>
+      </article>
+
+      <article class="glass-card about-card wide-card" data-reveal>
+        <div class="expertise-list">
+          <div class="expertise-item">
+            <span class="expertise-glyph">☿</span>
+            <div>
+              <h4>Vedic Astrology</h4>
+              <p>Natal charts, dasha prediction, transit forecasting, and remedial gemstone guidance.</p>
+            </div>
+          </div>
+          <div class="expertise-item">
+            <span class="expertise-glyph">⊕</span>
+            <div>
+              <h4>Vastu Shastra</h4>
+              <p>Sacred architecture for homes and offices, aligning spatial energy with cosmic flow.</p>
+            </div>
+          </div>
+          <div class="expertise-item">
+            <span class="expertise-glyph">☽</span>
+            <div>
+              <h4>Palmistry</h4>
+              <p>Reading the topography of the hand as a living record of karma and potential.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ SERVICES -->
+  <section class="services" id="services" aria-labelledby="services-title">
+    <div class="services-sticky-wrapper">
+      <div class="section-header">
+        <span class="section-eyebrow">Consultations</span>
+        <h2 id="services-title" class="section-title">What the Stars<br/>Reveal for You</h2>
+      </div>
+      <div class="services-track-wrapper" id="servicesTrackWrapper">
+        <div class="services-track" id="servicesTrack">
+
+          <article class="glass-card service-card" aria-label="Kundli Reading service">
+            <div class="service-planet" aria-hidden="true">☉</div>
+            <h3>Kundli Reading</h3>
+            <p class="service-duration">90 min · Personal</p>
+            <p>A complete forensic analysis of your birth chart — planets, houses, yogas, and the precise arc of your life's major chapters through dasha periods.</p>
+            <ul class="service-includes">
+              <li>Full natal chart interpretation</li>
+              <li>Current dasha &amp; antardasha reading</li>
+              <li>Remedies &amp; gemstone guidance</li>
+            </ul>
+            <a href="#contact" class="btn-card">Book Session</a>
+          </article>
+
+          <article class="glass-card service-card" aria-label="Matchmaking service">
+            <div class="service-planet" aria-hidden="true">♀</div>
+            <h3>Kundli Milan</h3>
+            <p class="service-duration">60 min · Couple</p>
+            <p>Beyond the 36 gunas — a deep compatibility reading examining Mangal dosha, the seventh house, Venus strength, and the karmic compatibility of two souls.</p>
+            <ul class="service-includes">
+              <li>Guna Milan &amp; Mangal analysis</li>
+              <li>Relationship longevity reading</li>
+              <li>Auspicious date selection</li>
+            </ul>
+            <a href="#contact" class="btn-card">Book Session</a>
+          </article>
+
+          <article class="glass-card service-card" aria-label="Career Reading service">
+            <div class="service-planet" aria-hidden="true">♄</div>
+            <h3>Career &amp; Wealth</h3>
+            <p class="service-duration">75 min · Personal</p>
+            <p>Saturn, the tenth house, and the nodes of the moon reveal your professional destiny. Understand the tides of fortune and act at the precise moment.</p>
+            <ul class="service-includes">
+              <li>10th &amp; 2nd house deep-dive</li>
+              <li>Business muhurat timing</li>
+              <li>Artha yoga identification</li>
+            </ul>
+            <a href="#contact" class="btn-card">Book Session</a>
+          </article>
+
+          <article class="glass-card service-card" aria-label="Muhurat service">
+            <div class="service-planet" aria-hidden="true">☾</div>
+            <h3>Muhurat Selection</h3>
+            <p class="service-duration">45 min · Any event</p>
+            <p>The universe has auspicious moments where success is written in the stars. Choosing the right muhurat for marriage, travel, business launch, or surgery can alter outcomes significantly.</p>
+            <ul class="service-includes">
+              <li>Event-specific timing</li>
+              <li>Panchang analysis</li>
+              <li>Nakshatra compatibility check</li>
+            </ul>
+            <a href="#contact" class="btn-card">Book Session</a>
+          </article>
+
+          <article class="glass-card service-card" aria-label="Vastu Shastra service">
+            <div class="service-planet" aria-hidden="true">⊕</div>
+            <h3>Vastu Shastra</h3>
+            <p class="service-duration">2 hr · Home or Office</p>
+            <p>Transform your living and working space into a vessel of prosperity, health, and harmony. Align your environment with the five elements and cardinal directions of cosmic energy.</p>
+            <ul class="service-includes">
+              <li>Floor plan energy mapping</li>
+              <li>Directional corrections</li>
+              <li>Remedies without demolition</li>
+            </ul>
+            <a href="#contact" class="btn-card">Book Session</a>
+          </article>
+
+          <article class="glass-card service-card" aria-label="Palmistry service">
+            <div class="service-planet" aria-hidden="true">☿</div>
+            <h3>Hasta Samudrika</h3>
+            <p class="service-duration">60 min · Personal</p>
+            <p>The hand carries its own Kundli — the mounts of Jupiter, Saturn, and Mars, the lines of fate, heart, and head, all whispering the soul's encoded autobiography.</p>
+            <ul class="service-includes">
+              <li>Full palm reading</li>
+              <li>Mount analysis</li>
+              <li>Future timeline mapping</li>
+            </ul>
+            <a href="#contact" class="btn-card">Book Session</a>
+          </article>
+
+        </div>
+      </div>
+      <div class="services-progress" aria-hidden="true">
+        <div class="services-progress-bar" id="servicesProgressBar"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ CONTACT -->
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="section-header">
+      <span class="section-eyebrow">Begin Your Journey</span>
+      <h2 id="contact-title" class="section-title">Seek the Stars.<br/>Book a Reading.</h2>
+    </div>
+
+    <div class="contact-layout">
+      <div class="contact-info glass-card" data-reveal>
+        <div class="contact-detail">
+          <span class="contact-glyph">☎</span>
+          <div>
+            <p class="contact-label">Call or WhatsApp</p>
+            <a href="tel:+919876543210" class="contact-value">+91 98765 43210</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-glyph">✉</span>
+          <div>
+            <p class="contact-label">Email</p>
+            <a href="mailto:achaljha@bhavishyaguru.in" class="contact-value">achaljha@bhavishyaguru.in</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-glyph">◎</span>
+          <div>
+            <p class="contact-label">Location</p>
+            <p class="contact-value">Darbhanga · Bihar · India<br/>Online sessions available worldwide</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-glyph">◷</span>
+          <div>
+            <p class="contact-label">Consultation Hours</p>
+            <p class="contact-value">Mon – Sat, 9 AM – 7 PM IST<br/>Sunday by appointment</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card contact-form-wrap" data-reveal>
+        <form class="contact-form" id="contactForm" novalidate aria-label="Booking enquiry form">
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" id="name" name="name" required autocomplete="name" placeholder=" " />
+              <label for="name">Your Name</label>
+              <div class="input-glow" aria-hidden="true"></div>
+            </div>
+            <div class="form-group">
+              <input type="date" id="dob" name="dob" required placeholder=" " />
+              <label for="dob">Date of Birth</label>
+              <div class="input-glow" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="email" id="email" name="email" required autocomplete="email" placeholder=" " />
+              <label for="email">Email Address</label>
+              <div class="input-glow" aria-hidden="true"></div>
+            </div>
+            <div class="form-group">
+              <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder=" " />
+              <label for="phone">Phone / WhatsApp</label>
+              <div class="input-glow" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <select id="service" name="service" required>
+              <option value="" disabled selected></option>
+              <option value="kundli">Kundli Reading</option>
+              <option value="milan">Kundli Milan</option>
+              <option value="career">Career &amp; Wealth</option>
+              <option value="muhurat">Muhurat Selection</option>
+              <option value="vastu">Vastu Shastra</option>
+              <option value="palmistry">Hasta Samudrika</option>
+            </select>
+            <label for="service">Service Required</label>
+            <div class="input-glow" aria-hidden="true"></div>
+          </div>
+          <div class="form-group">
+            <textarea id="message" name="message" rows="4" placeholder=" "></textarea>
+            <label for="message">Your Question or Concern</label>
+            <div class="input-glow" aria-hidden="true"></div>
+          </div>
+          <button type="submit" class="btn-primary btn-submit">
+            <span class="btn-text">Send Enquiry</span>
+            <span class="btn-icon" aria-hidden="true">✦</span>
+          </button>
+          <p class="form-note">All consultations are confidential. Typical response within 24 hours.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <p class="footer-logo">Bhavishya Guru</p>
+      <p class="footer-tagline">Jyotish Shastra · Est. 1998 · Darbhanga, Bihar</p>
+      <p class="footer-copy">© 2025 Achal Jha · Bhavishya Guru. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
